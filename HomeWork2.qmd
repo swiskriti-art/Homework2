@@ -4,23 +4,98 @@ format: html
 editor: visual
 ---
 
-## Quarto
+## Vector
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
-
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+Creating pre and post vectors for blood pressure measurements
 
 ```{r}
-1 + 1
+pre <- c (120, 151, 125, 126, 115, 132, 132, 129, 134, 139, 127, 122, 127, 135, 133, 128, 147, 138, 140, 132)
+
+post <- c (127, 145, 135, 122, 115, 122, 123, 126, 126, 129, 132, 146, 120, 114, 121, 120, 128, 120, 133, 115)
+
 ```
 
-You can add options to executable code like this
+Adding names to the vectors elements
 
 ```{r}
-#| echo: false
-2 * 2
+subj <- paste("Subject", 1:20, sep = "_")
+names(pre) <- subj
+names(post) <- subj
+names(pre)
+names(post)
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+Calculating change in blood pressure
+
+```{r}
+diff <- post - pre
+diff
+```
+
+Calculating average of difference in blood pressure
+
+```{r}
+avg <- mean(diff)
+avg
+```
+
+Patients having decrease in blood pressure after treatment
+
+```{r}
+which(diff < 0)
+```
+
+Subset of patients differences only return having positive change
+
+```{r}
+posChange <- diff < 0
+diffPosChange <- diff[posChange]
+diffPosChange
+```
+
+Average decrease in blood pressure (positive change)
+
+```{r}
+avgPosChange  <- mean (diffPosChange)
+avgPosChange
+```
+
+Creating a data frame 
+```{r}
+bp_df <- data.frame(patient=subj, pre_bp=pre, post_bp=post, diff_bp=diff, row.names = NULL)
+bp_df
+```
+Getting the rows containing diff_bp column negative 
+```{r}
+bp_df[bp_df$diff_bp < 0,]
+```
+Adding a new column to the data frame if 
+```{r}
+bp_df$low_bp <- (bp_df$post_bp < 120)
+knitr::kable(bp_df)
+```
+## List
+Creating a new data frame with placebo 
+```{r}
+pre_treat <- c (138, 135, 147, 117, 152, 134, 114, 121, 131, 130)
+post_treat <- c(105, 136, 123, 130, 134, 143, 135, 139, 120, 124)
+placebo_df <- data.frame(patient=subj[1:10], pre_bp=pre_treat, post_bp=post_treat, diff_bp=(post_treat-pre_treat),low_bp= (post_treat < 120), row.names = NULL)
+```
+Creating a list treatment and placebo
+```{r}
+treat_list <- list(treatment=bp_df, placebo=placebo_df)
+```
+Accessing the list in different ways
+```{r}
+treat_list[[1]]
+treat_list$treatment
+treat_list[1]
+
+```
+Access pre_bp of placebo data frame 
+```{r}
+treat_list$placebo$pre_bp
+```
+
+
+
