@@ -60,6 +60,8 @@ avgPosChange  <- mean (diffPosChange)
 avgPosChange
 ```
 
+## Data Frame
+
 Creating a data frame 
 ```{r}
 bp_df <- data.frame(patient=subj, pre_bp=pre, post_bp=post, diff_bp=diff, row.names = NULL)
@@ -74,7 +76,9 @@ Adding a new column to the data frame if
 bp_df$low_bp <- (bp_df$post_bp < 120)
 knitr::kable(bp_df)
 ```
+
 ## List
+
 Creating a new data frame with placebo 
 ```{r}
 pre_treat <- c (138, 135, 147, 117, 152, 134, 114, 121, 131, 130)
